@@ -28,7 +28,7 @@
     "format": "prettier-eslint --write \"src/**/*.js\" ",
     "flow": "node_modules/.bin/flow",
     "precommit": "lint-staged && npm run flow",
-    "release": "np"
+    "release": "np --no-cleanup"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
