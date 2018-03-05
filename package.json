@@ -46,13 +46,9 @@
     "lint-staged": "^7.0.0",
     "np": "^2.20.1",
     "prettier-eslint-cli": "^4.7.1",
-    "webpack": "^2.6.1",
-    "webpack-cli": "^2.0.10"
+    "webpack": "^2.6.1"
   },
   "lint-staged": {
-    "src/*.+(js|jsx)": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "src/*.+(js|jsx)": ["prettier-eslint --write", "git add"]
   }
 }
