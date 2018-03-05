@@ -1,6 +1,6 @@
 {
   "name": "favo",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A UI block library",
   "author": {
     "name": "Audrey Li",
@@ -28,7 +28,6 @@
     "format": "prettier-eslint --write \"src/**/*.js\" ",
     "flow": "node_modules/.bin/flow",
     "precommit": "lint-staged && npm run flow",
-    "prepublish": "npm run build",
     "release": "np"
   },
   "devDependencies": {
@@ -51,9 +50,6 @@
     "webpack-cli": "^2.0.10"
   },
   "lint-staged": {
-    "src/*.+(js|jsx)": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "src/*.+(js|jsx)": ["prettier-eslint --write", "git add"]
   }
 }
