@@ -24482,47 +24482,56 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(1);
 
 var React = _interopRequireWildcard(_react);
 
-var _courseraUi = __webpack_require__(4);
+var _recompose = __webpack_require__(2);
+
+var _DummyBlock = __webpack_require__(775);
+
+var _DummyBlock2 = _interopRequireDefault(_DummyBlock);
+
+var _src = __webpack_require__(515);
+
+var ALL_CONFIG_COMPONENTS_WIHT_HOC = _interopRequireWildcard(_src);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function UniversalBlock(_ref) {
+  var id = _ref.id,
+      type = _ref.type,
+      componentNameAlt = _ref.componentName,
+      hiddenBlockNames = _ref.hiddenBlockNames;
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+  var componentName = type === 'TEMPLATE' ? 'Template' : componentNameAlt;
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+  var Tag = ALL_CONFIG_COMPONENTS_WIHT_HOC[componentName];
 
-var UniversalBlock = function (_React$Component) {
-  _inherits(UniversalBlock, _React$Component);
-
-  function UniversalBlock() {
-    _classCallCheck(this, UniversalBlock);
-
-    return _possibleConstructorReturn(this, (UniversalBlock.__proto__ || Object.getPrototypeOf(UniversalBlock)).apply(this, arguments));
+  if (!Tag) {
+    // eslint-disable-next-line
+    console.error('FIXME', componentNameAlt);
   }
 
-  _createClass(UniversalBlock, [{
-    key: 'render',
-    value: function render() {
-      return React.createElement(
-        'div',
-        null,
-        'This is a UniversalBlock component!',
-        React.createElement(_courseraUi.Button, { type: 'primary', label: 'It Works with Coursera-UI !' })
-      );
-    }
-  }]);
+  return React.createElement(
+    'div',
+    { className: 'UniversalBlockProd' },
+    !Tag && React.createElement(_DummyBlock2.default, { key: id, componentName: componentName }),
+    Tag && React.createElement(Tag, { componentName: componentNameAlt })
+  );
+}
 
-  return UniversalBlock;
-}(React.Component);
+var UniversalBlockData = {
+  id: 'abc',
+  type: 'ENG',
+  componentName: 'Banner'
+};
 
-exports.default = UniversalBlock;
+exports.default = (0, _recompose.compose)((0, _recompose.setDisplayName)('UniversalBlockHOC'), (0, _recompose.withProps)(function () {
+  return UniversalBlockData;
+}))(UniversalBlock);
 
 /***/ }),
 /* 173 */
@@ -50902,7 +50911,7 @@ exports.default = Avatar;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SuccessStoriesMDP = exports.CustomBlock = exports.UniversalBlock = undefined;
+exports.AboutMasterTrackBase = exports.AboutMasterTrack = exports.SuccessStoriesMDPBase = exports.SuccessStoriesMDP = exports.CustomBlockBase = exports.CustomBlock = exports.UniversalBlock = undefined;
 
 var _UniversalBlock = __webpack_require__(172);
 
@@ -50921,6 +50930,12 @@ Object.defineProperty(exports, 'CustomBlock', {
     return _interopRequireDefault(_CustomBlock).default;
   }
 });
+Object.defineProperty(exports, 'CustomBlockBase', {
+  enumerable: true,
+  get: function get() {
+    return _CustomBlock.CustomBlock;
+  }
+});
 
 var _SuccessStoriesMDP = __webpack_require__(174);
 
@@ -50928,6 +50943,27 @@ Object.defineProperty(exports, 'SuccessStoriesMDP', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_SuccessStoriesMDP).default;
+  }
+});
+Object.defineProperty(exports, 'SuccessStoriesMDPBase', {
+  enumerable: true,
+  get: function get() {
+    return _SuccessStoriesMDP.SuccessStoriesMDP;
+  }
+});
+
+var _AboutMasterTrack = __webpack_require__(778);
+
+Object.defineProperty(exports, 'AboutMasterTrack', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_AboutMasterTrack).default;
+  }
+});
+Object.defineProperty(exports, 'AboutMasterTrackBase', {
+  enumerable: true,
+  get: function get() {
+    return _AboutMasterTrack.AboutMasterTrack;
   }
 });
 
@@ -97834,6 +97870,395 @@ function isString(obj) {
     return toString.call(obj) === "[object String]"
 }
 
+
+/***/ }),
+/* 775 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = DummyBlock;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function DummyBlock(_ref) {
+  var _ref$componentName = _ref.componentName,
+      componentName = _ref$componentName === undefined ? 'DummyBlock' : _ref$componentName;
+
+  return React.createElement(
+    _courseraUi.Box,
+    { rootClassName: 'DummyBlock w-100 p-y-1s p-x-1 bg-gray p-y-5 p-x-2', alignItems: 'center', justifyContent: 'center' },
+    React.createElement(
+      'h2',
+      null,
+      ' TODO: ',
+      componentName
+    )
+  );
+}
+
+/***/ }),
+/* 776 */,
+/* 777 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(10);
+
+
+/***/ }),
+/* 778 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AboutMasterTrackData = undefined;
+exports.AboutMasterTrack = AboutMasterTrack;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _recompose = __webpack_require__(2);
+
+var _ProductGlance = __webpack_require__(780);
+
+var _ProductGlance2 = _interopRequireDefault(_ProductGlance);
+
+var _LearningObjectives = __webpack_require__(779);
+
+var _LearningObjectives2 = _interopRequireDefault(_LearningObjectives);
+
+var _Skills = __webpack_require__(781);
+
+var _Skills2 = _interopRequireDefault(_Skills);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function AboutMasterTrack(_ref) {
+  var description = _ref.description,
+      tagline = _ref.tagline,
+      courseName = _ref.courseName,
+      activeItemId = _ref.activeItemId,
+      onCardItemClick = _ref.onCardItemClick,
+      skills = _ref.skills,
+      level = _ref.level,
+      _ref$learningObjectiv = _ref.learningObjectives,
+      learningObjectives = _ref$learningObjectiv === undefined ? [] : _ref$learningObjectiv,
+      price = _ref.price,
+      totalDuration = _ref.totalDuration,
+      weeklyTimeCommitment = _ref.weeklyTimeCommitment,
+      projectCounts = _ref.projectCounts,
+      _ref$glance = _ref.glance,
+      glance = _ref$glance === undefined ? [] : _ref$glance,
+      rest = _objectWithoutProperties(_ref, ['description', 'tagline', 'courseName', 'activeItemId', 'onCardItemClick', 'skills', 'level', 'learningObjectives', 'price', 'totalDuration', 'weeklyTimeCommitment', 'projectCounts', 'glance']);
+
+  return React.createElement(
+    _courseraUi.Container,
+    { rootClassName: 'AboutMasterTrack p-section p-y-5' },
+    React.createElement(
+      _courseraUi.Row,
+      null,
+      React.createElement(
+        _courseraUi.Col,
+        { xs: 12, md: 8, rootClassName: 'p-r-4' },
+        React.createElement(
+          _courseraUi.H2,
+          { tag: 'span', rootClassName: 'd-block m-b-3' },
+          'About this MasterTrack'
+        ),
+        React.createElement(
+          _courseraUi.H2Bold,
+          { rootClassName: 'm-b-2' },
+          tagline
+        ),
+        React.createElement(
+          'div',
+          { className: 'p-b-1 m-b-1' },
+          React.createElement(
+            _courseraUi.ReadMore,
+            null,
+            description
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'm-b-2' },
+          React.createElement(_LearningObjectives2.default, { learningObjectives: learningObjectives })
+        ),
+        React.createElement(_Skills2.default, { skills: skills })
+      ),
+      React.createElement(
+        _courseraUi.Col,
+        { xs: 12, md: 4, rootClassName: 'p-t-5' },
+        React.createElement(_ProductGlance2.default, { dataList: glance })
+      )
+    )
+  );
+}
+
+var AboutMasterTrackData = exports.AboutMasterTrackData = {
+  description: 'Learners will gain hands-on experience with taking a product from initial concept, through user research, ideation, and refinement, formal analysis, prototyping, and user testing. ...',
+  tagline: 'Integrate UX Research and UX Design to create great products through understanding user needs',
+  skills: ['User Centered Design Theory', 'User Testing', 'Heuristic Evaluation', 'Wireframing', 'Prototyping', 'A/B Testing', 'Remote Testing'],
+  learningObjectives: ['Incorporate UX Research and Design to design a complete product', 'Taking from an initial concept to an interactive prototype', 'Learn how to do refinement, formal analysis, prototyping, and user testing', 'Learn how to conduct UX research using A/B testing and web analytics'],
+  glance: [{
+    icon: 'SvgGlobe',
+    title: '100% online courses'
+  }, {
+    icon: 'SvgMoney',
+    title: '$2000 ',
+    subtitle: 'option to pay in 2 installments'
+  }, {
+    icon: 'SvgClock',
+    title: '8 months to complete',
+    subtitle: '3-5 hours to complete (scheduled)'
+  }, {
+    icon: 'SvgGraph2',
+    title: 'Beginner level',
+    subtitle: 'No prior experience needed'
+  }, {
+    icon: 'SvgStacks',
+    title: '12 hands-on projects'
+  }, {
+    icon: 'SvgCommentDots',
+    title: 'English',
+    subtitle: 'Subtitles: French, Chinese(Simplified), Greek, Italian, Portuguese(Brazillian), Vietanamese, Russian'
+  }],
+  // level: 'BEGINNER',
+  // totalDuration: '8 months',
+  // weeklyTimeCommitment: '3-5 hours per week (scheduled)',
+  // price: 2000,
+  // projectCounts: 3, // derieved
+  subtitles: 'Subtitles available for some courses: French, Chinese(Simplified), Greek, Italian, Portuguese(Brazillian), Vietanamese, Russian'
+};
+
+exports.default = (0, _recompose.compose)((0, _recompose.withProps)(function () {
+  return AboutMasterTrackData;
+}))(AboutMasterTrack);
+
+/***/ }),
+/* 779 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = LearningObjectives;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _svg = __webpack_require__(777);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function LearningObjectives(_ref) {
+  var disableResponsive = _ref.disableResponsive,
+      _ref$titleTag = _ref.titleTag,
+      titleTag = _ref$titleTag === undefined ? 'h3' : _ref$titleTag,
+      _ref$learningObjectiv = _ref.learningObjectives,
+      learningObjectives = _ref$learningObjectiv === undefined ? [] : _ref$learningObjectiv;
+
+  if (learningObjectives.length === 0) return null;
+  return React.createElement(
+    'div',
+    { className: 'LearningObjectives border-a p-a-2', style: { borderRadius: 4 } },
+    React.createElement(
+      _courseraUi.Label,
+      { tag: titleTag, rootClassName: 'text-secondary m-b-2' },
+      'What you will learn',
+      ' '
+    ),
+    React.createElement(
+      _courseraUi.Row,
+      { tag: 'ul', rootClassName: 'list-style-none p-a-0 p-l-1' },
+      learningObjectives.map(function (objective) {
+        var htmlMarkup = React.createElement(
+          _courseraUi.Box,
+          { tag: 'li', key: objective, rootClassName: 'm-b-1s' },
+          React.createElement(
+            'span',
+            { className: 'm-r-1' },
+            React.createElement(_svg.SvgCheck, { color: _courseraUi.color.success })
+          ),
+          objective
+        );
+
+        return disableResponsive ? htmlMarkup : React.createElement(
+          _courseraUi.Col,
+          { xs: 12, md: 6, key: objective },
+          htmlMarkup
+        );
+      })
+    )
+  );
+}
+
+/***/ }),
+/* 780 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.default = ProductGlance;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _svg = __webpack_require__(777);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var ICON_SIZE = 40;
+
+var ALL_ICONS = {
+  SvgGlobe: _svg.SvgGlobe,
+  SvgMoney: _svg.SvgMoney,
+  SvgClock: _svg.SvgClock,
+  SvgGraph2: _svg.SvgGraph2,
+  SvgStacks: _svg.SvgStacks,
+  SvgCommentDots: _svg.SvgCommentDots
+};
+var DEFAULT_ICON = _svg.SvgChevronRight;
+
+var styles = _courseraUi.StyleSheet.create({
+  iconWrapper: {
+    width: ICON_SIZE,
+    height: ICON_SIZE,
+    borderRadius: '50%',
+    border: '2px solid ' + _courseraUi.color.divider,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0
+  }
+});
+
+function ProductGlance(_ref) {
+  var _ref$dataList = _ref.dataList,
+      dataList = _ref$dataList === undefined ? [] : _ref$dataList;
+
+  var dataListWithIcons = dataList.map(function (item) {
+    return _extends({}, item, {
+      IconTag: ALL_ICONS[item.icon] || DEFAULT_ICON
+    });
+  });
+
+  return React.createElement(
+    'div',
+    { className: 'ProductGlance' },
+    dataListWithIcons.map(function (_ref2) {
+      var title = _ref2.title,
+          subtitle = _ref2.subtitle,
+          IconTag = _ref2.IconTag;
+      return React.createElement(
+        _courseraUi.Box,
+        { key: title, alignItems: 'center', rootClassName: 'm-b-3' },
+        React.createElement(
+          'div',
+          (0, _courseraUi.css)('m-a-1s m-r-1', styles.iconWrapper),
+          React.createElement(IconTag, { size: ICON_SIZE - 24 })
+        ),
+        React.createElement(
+          _courseraUi.Box,
+          { flexDirection: 'column' },
+          React.createElement(
+            _courseraUi.H4Bold,
+            { tag: 'h4', rootClassName: 'm-b-1s font-md' },
+            title
+          ),
+          React.createElement(
+            'span',
+            { className: 'font-sm text-secondary' },
+            subtitle
+          )
+        )
+      );
+    })
+  );
+}
+
+/***/ }),
+/* 781 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = Skills;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function Skills(_ref) {
+  var _ref$skills = _ref.skills,
+      skills = _ref$skills === undefined ? [] : _ref$skills,
+      rest = _objectWithoutProperties(_ref, ['skills']);
+
+  if (skills.length === 0) return null;
+  return React.createElement(
+    'div',
+    { className: 'Skills border-a p-a-2', style: { borderRadius: 4 } },
+    React.createElement(
+      _courseraUi.Label,
+      { tag: 'h3', rootClassName: 'text-secondary m-b-2' },
+      'Skills you will learn'
+    ),
+    React.createElement(
+      _courseraUi.Box,
+      { flexWrap: 'wrap' },
+      skills.map(function (skill) {
+        return React.createElement(_courseraUi.Pill, { key: skill, size: 'lg', label: skill, rootClassName: 'm-r-1s m-b-1s' });
+      })
+    )
+  );
+}
 
 /***/ })
 /******/ ]);
