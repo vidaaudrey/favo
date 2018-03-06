@@ -9,7 +9,7 @@
   "main": "build/index.js",
   "dependencies": {
     "@coursera/coursera-ui": "^0.4.2",
-    "aphrodite": "^1.2.5",
+    "aphrodite": "1.2.0",
     "moment": "^2.21.0",
     "prop-types": "^15.6.1",
     "react-markdown": "^3.2.2",

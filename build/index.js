@@ -1298,9 +1298,9 @@ var SvgIcon = (_temp = _class = function (_React$Component) {
     key: 'componentWillReceiveProps',
     value: function () {
       function componentWillReceiveProps(nextProps) {
-        if ('hovered' in nextProps && nextProps.hovered !== this.state.hovered) {
+        if ('hovered' in nextProps && !!nextProps.hovered !== !!this.state.hovered) {
           this.setState(function () {
-            return { hovered: nextProps.hovered };
+            return { hovered: !!nextProps.hovered };
           });
         }
       }
@@ -1336,7 +1336,7 @@ var SvgIcon = (_temp = _class = function (_React$Component) {
 
         return React.createElement(
           'svg',
-          _extends({}, (0, _underscore2['default'])(rest).omit('disableMouseEvent'), htmlAttributes, (0, _theme.css)(styles.SvgIcon), {
+          _extends({}, (0, _underscore2['default'])(rest).omit('disableMouseEvent', 'hovered'), htmlAttributes, (0, _theme.css)(styles.SvgIcon), {
             style: mergedStyles,
             onMouseEnter: this.handleMouseEnter,
             onMouseLeave: this.handleMouseLeave,
@@ -11334,6 +11334,10 @@ var _stringHash = __webpack_require__(176);
 
 var _stringHash2 = _interopRequireDefault(_stringHash);
 
+var _orderedElements = __webpack_require__(114);
+
+var _orderedElements2 = _interopRequireDefault(_orderedElements);
+
 /* ::
 type Pair = [ string, any ];
 type Pairs = Pair[];
@@ -11341,6 +11345,15 @@ type PairsMapper = (pair: Pair) => Pair;
 type ObjectMap = { [id:string]: any };
 */
 
+// {K1: V1, K2: V2, ...} -> [[K1, V1], [K2, V2]]
+var objectToPairs = function objectToPairs(obj /* : ObjectMap */) {
+    return (/* : Pairs */Object.keys(obj).map(function (key) {
+            return [key, obj[key]];
+        })
+    );
+};
+
+exports.objectToPairs = objectToPairs;
 var mapObj = function mapObj(obj, /* : ObjectMap */
 fn /* : PairsMapper */
 ) /* : ObjectMap */{
@@ -11360,6 +11373,24 @@ fn /* : PairsMapper */
 };
 
 exports.mapObj = mapObj;
+// Flattens an array one level
+// [[A], [B, C, [D]]] -> [A, B, C, [D]]
+var flatten = function flatten(list /* : any[] */) {
+    return (/* : any[] */list.reduce(function (memo, x) {
+            return memo.concat(x);
+        }, [])
+    );
+};
+
+exports.flatten = flatten;
+var flattenDeep = function flattenDeep(list /* : any[] */) {
+    return (/* : any[] */list.reduce(function (memo, x) {
+            return memo.concat(Array.isArray(x) ? flattenDeep(x) : x);
+        }, [])
+    );
+};
+
+exports.flattenDeep = flattenDeep;
 var UPPERCASE_RE = /([A-Z])/g;
 var UPPERCASE_RE_TO_KEBAB = function UPPERCASE_RE_TO_KEBAB(match /* : string */) {
     return (/* : string */'-' + match.toLowerCase()
@@ -11375,6 +11406,41 @@ var kebabifyStyleName = function kebabifyStyleName(string /* : string */) /* : s
 };
 
 exports.kebabifyStyleName = kebabifyStyleName;
+var isPlainObject = function isPlainObject(x /* : ObjectMap | any */
+) {
+    return (/* : boolean */typeof x === 'object' && !Array.isArray(x) && x !== null
+    );
+};
+
+var recursiveMerge = function recursiveMerge(a, /* : OrderedElements | ObjectMap | Map<string,any> | any */
+b /* : ObjectMap | Map<string,any> */
+) /* : OrderedElements | any */{
+    // TODO(jlfwong): Handle malformed input where a and b are not the same
+    // type.
+
+    if (!isPlainObject(a) || !isPlainObject(b)) {
+        if (isPlainObject(b)) {
+            return _orderedElements2['default'].from(b);
+        } else {
+            return b;
+        }
+    }
+
+    var ret = _orderedElements2['default'].from(a);
+    var right = _orderedElements2['default'].from(b);
+
+    right.forEach(function (key, val) {
+        if (ret.has(key)) {
+            ret.set(key, recursiveMerge(ret.get(key), val));
+        } else {
+            ret.set(key, val);
+        }
+    });
+
+    return ret;
+};
+
+exports.recursiveMerge = recursiveMerge;
 /**
  * CSS properties which accept numbers but are not in units of "px".
  * Taken from React's CSSProperty.js
@@ -11461,21 +11527,6 @@ prop /* : any */
 };
 
 exports.stringifyValue = stringifyValue;
-var stringifyAndImportantifyValue = function stringifyAndImportantifyValue(key, /* : string */
-prop /* : any */
-) {
-    return (/* : string */importantify(stringifyValue(key, prop))
-    );
-};
-
-exports.stringifyAndImportantifyValue = stringifyAndImportantifyValue;
-// Turn a string into a hash string of base-36 values (using letters and numbers)
-var hashString = function hashString(string /* : string */) {
-    return (/* string */(0, _stringHash2['default'])(string).toString(36)
-    );
-};
-
-exports.hashString = hashString;
 // Hash a javascript object using JSON.stringify. This is very fast, about 3
 // microseconds on my computer for a sample object:
 // http://jsperf.com/test-hashfnv32a-hash/5
@@ -11485,7 +11536,7 @@ exports.hashString = hashString;
 // ordering of objects. Ben Alpert says that Facebook depends on this, so we
 // can probably depend on this too.
 var hashObject = function hashObject(object /* : ObjectMap */) {
-    return (/* : string */hashString(JSON.stringify(object))
+    return (/* : string */(0, _stringHash2['default'])(JSON.stringify(object)).toString(36)
     );
 };
 
@@ -11502,6 +11553,7 @@ var importantify = function importantify(string /* : string */) {
         string[string.length - 10] === '!' && string.slice(-11) === ' !important' ? string : string + ' !important'
     );
 };
+exports.importantify = importantify;
 
 /***/ }),
 /* 69 */
@@ -15010,6 +15062,8 @@ Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -15164,17 +15218,13 @@ selectorHandlers, /* : SelectorHandler[] */
 stringHandlers, /* : StringHandlers */
 useImportant /* : boolean */
 ) /* : string */{
-    var merged = new _orderedElements2['default']();
-
-    for (var i = 0; i < styleTypes.length; i++) {
-        merged.addStyleType(styleTypes[i]);
-    }
+    var merged /* : OrderedElements */ = styleTypes.reduce(_util.recursiveMerge, new _orderedElements2['default']());
 
     var plainDeclarations = new _orderedElements2['default']();
     var generatedStyles = "";
 
     // TODO(emily): benchmark this to see if a plain for loop would be faster.
-    merged.forEach(function (val, key) {
+    merged.forEach(function (key, val) {
         // For each key, see if one of the selector handlers will handle these
         // styles.
         var foundHandler = selectorHandlers.some(function (handler) {
@@ -15191,7 +15241,7 @@ useImportant /* : boolean */
         // If none of the handlers handled it, add it to the list of plain
         // style declarations.
         if (!foundHandler) {
-            plainDeclarations.set(key, val, true);
+            plainDeclarations.set(key, val);
         }
     });
 
@@ -15208,40 +15258,22 @@ exports.generateCSS = generateCSS;
 var runStringHandlers = function runStringHandlers(declarations, /* : OrderedElements */
 stringHandlers, /* : StringHandlers */
 selectorHandlers /* : SelectorHandler[] */
-) /* : void */{
-    if (!stringHandlers) {
-        return;
-    }
-
-    var stringHandlerKeys = Object.keys(stringHandlers);
-    for (var i = 0; i < stringHandlerKeys.length; i++) {
-        var key = stringHandlerKeys[i];
-        if (declarations.has(key)) {
-            // A declaration exists for this particular string handler, so we
-            // need to let the string handler interpret the declaration first
-            // before proceeding.
-            //
+) /* */{
+    var hasStringHandlers = !!stringHandlers;
+    return declarations.map(function (key, val) {
+        // If a handler exists for this particular key, let it interpret
+        // that value first before continuing
+        if (hasStringHandlers && stringHandlers.hasOwnProperty(key)) {
             // TODO(emily): Pass in a callback which generates CSS, similar to
             // how our selector handlers work, instead of passing in
             // `selectorHandlers` and have them make calls to `generateCSS`
             // themselves. Right now, this is impractical because our string
             // handlers are very specialized and do complex things.
-            declarations.set(key, stringHandlers[key](declarations.get(key), selectorHandlers),
-
-            // Preserve order here, since we are really replacing an
-            // unprocessed style with a processed style, not overriding an
-            // earlier style
-            false);
+            return stringHandlers[key](val, selectorHandlers);
+        } else {
+            return val;
         }
-    }
-};
-
-var transformRule = function transformRule(key, /* : string */
-value, /* : string */
-transformValue /* : function */
-) {
-    return (/* : string */(0, _util.kebabifyStyleName)(key) + ':' + transformValue(key, value) + ';'
-    );
+    });
 };
 
 /**
@@ -15281,76 +15313,96 @@ stringHandlers, /* : StringHandlers */
 useImportant, /* : boolean */
 selectorHandlers /* : SelectorHandler[] */
 ) /* : string */{
-    // Mutates declarations
-    runStringHandlers(declarations, stringHandlers, selectorHandlers);
+    var handledDeclarations /* : OrderedElements */ = runStringHandlers(declarations, stringHandlers, selectorHandlers);
 
-    var originalElements = _extends({}, declarations.elements);
+    var originalElements = _extends({}, handledDeclarations.elements);
 
     // NOTE(emily): This mutates handledDeclarations.elements.
-    var prefixedElements = prefixAll(declarations.elements);
+    var prefixedDeclarations = prefixAll(handledDeclarations.elements);
 
-    var elementNames = Object.keys(prefixedElements);
-    if (elementNames.length !== declarations.keyOrder.length) {
-        // There are some prefixed values, so we need to figure out how to sort
-        // them.
-        //
-        // Loop through prefixedElements, looking for anything that is not in
-        // sortOrder, which means it was added by prefixAll. This means that we
-        // need to figure out where it should appear in the sortOrder.
-        for (var i = 0; i < elementNames.length; i++) {
-            if (!originalElements.hasOwnProperty(elementNames[i])) {
-                // This element is not in the sortOrder, which means it is a prefixed
-                // value that was added by prefixAll. Let's try to figure out where it
-                // goes.
-                var originalStyle = undefined;
-                if (elementNames[i][0] === 'W') {
-                    // This is a Webkit-prefixed style, like "WebkitTransition". Let's
-                    // find its original style's sort order.
-                    originalStyle = elementNames[i][6].toLowerCase() + elementNames[i].slice(7);
-                } else if (elementNames[i][1] === 'o') {
-                    // This is a Moz-prefixed style, like "MozTransition". We check
-                    // the second character to avoid colliding with Ms-prefixed
-                    // styles. Let's find its original style's sort order.
-                    originalStyle = elementNames[i][3].toLowerCase() + elementNames[i].slice(4);
-                } else {
-                    // if (elementNames[i][1] === 's') {
-                    // This is a Ms-prefixed style, like "MsTransition".
-                    originalStyle = elementNames[i][2].toLowerCase() + elementNames[i].slice(3);
-                }
+    var prefixedRules = (0, _util.flatten)((0, _util.objectToPairs)(prefixedDeclarations).map(function (_ref) {
+        var _ref2 = _slicedToArray(_ref, 2);
 
-                if (originalStyle && originalElements.hasOwnProperty(originalStyle)) {
-                    var originalIndex = declarations.keyOrder.indexOf(originalStyle);
-                    declarations.keyOrder.splice(originalIndex, 0, elementNames[i]);
-                } else {
-                    // We don't know what the original style was, so sort it to
-                    // top. This can happen for styles that are added that don't
-                    // have the same base name as the original style.
-                    declarations.keyOrder.unshift(elementNames[i]);
-                }
-            }
-        }
-    }
+        var key = _ref2[0];
+        var value = _ref2[1];
 
-    var transformValue = useImportant === false ? _util.stringifyValue : _util.stringifyAndImportantifyValue;
-
-    var rules = [];
-    for (var i = 0; i < declarations.keyOrder.length; i++) {
-        var key = declarations.keyOrder[i];
-        var value = prefixedElements[key];
         if (Array.isArray(value)) {
             // inline-style-prefixer returns an array when there should be
             // multiple rules for the same key. Here we flatten to multiple
             // pairs with the same key.
-            for (var j = 0; j < value.length; j++) {
-                rules.push(transformRule(key, value[j], transformValue));
+            return value.map(function (v) {
+                return [key, v];
+            });
+        }
+        return [[key, value]];
+    }));
+
+    // Calculate the order that we want to each element in `prefixedRules` to
+    // be in, based on its index in the original key ordering.
+    var sortOrder = {};
+    for (var i = 0; i < handledDeclarations.keyOrder.length; i++) {
+        var key = handledDeclarations.keyOrder[i];
+        sortOrder[key] = i;
+
+        // In order to keep most prefixed versions of keys in about the same
+        // order that the original keys were in but placed before the
+        // unprefixed version, we generate the prefixed forms of the keys and
+        // set their order to the same as the original key minus a little bit.
+        var capitalizedKey = '' + key[0].toUpperCase() + key.slice(1);
+        var prefixedKeys = ['Webkit' + capitalizedKey, 'Moz' + capitalizedKey, 'ms' + capitalizedKey];
+        for (var j = 0; j < prefixedKeys.length; ++j) {
+            if (!originalElements.hasOwnProperty(prefixedKeys[j])) {
+                sortOrder[prefixedKeys[j]] = i - 0.5;
+                originalElements[prefixedKeys[j]] = originalElements[key];
             }
-        } else {
-            rules.push(transformRule(key, value, transformValue));
         }
     }
 
-    if (rules.length) {
-        return selector + '{' + rules.join("") + '}';
+    // Calculate the sort order of a given property.
+    function sortOrderForProperty(_ref3) {
+        var _ref32 = _slicedToArray(_ref3, 2);
+
+        var key = _ref32[0];
+        var value = _ref32[1];
+
+        if (sortOrder.hasOwnProperty(key)) {
+            if (originalElements.hasOwnProperty(key) && originalElements[key] !== value) {
+                // The value is prefixed. Sort this just before the key with
+                // the unprefixed value.
+                return sortOrder[key] - 0.25;
+            } else {
+                // Either the key and value are unprefixed here, or this is a
+                // prefixed key. Either way, this is handled by the sortOrder
+                // calculation above.
+                return sortOrder[key];
+            }
+        } else {
+            // If the property isn't in the sort order, it wasn't in the
+            // original set of unprefixed keys, so it must be a prefixed key.
+            // Sort at order -1 to put it at the top of the set of styles.
+            return -1;
+        }
+    }
+
+    // Actually sort the rules according to the sort order.
+    prefixedRules.sort(function (a, b) {
+        return sortOrderForProperty(a) - sortOrderForProperty(b);
+    });
+
+    var transformValue = useImportant === false ? _util.stringifyValue : function (key, value) {
+        return (0, _util.importantify)((0, _util.stringifyValue)(key, value));
+    };
+
+    var rules = prefixedRules.map(function (_ref4) {
+        var _ref42 = _slicedToArray(_ref4, 2);
+
+        var key = _ref42[0];
+        var value = _ref42[1];
+        return (0, _util.kebabifyStyleName)(key) + ':' + transformValue(key, value) + ';';
+    }).join("");
+
+    if (rules) {
+        return selector + '{' + rules + '}';
     } else {
         return "";
     }
@@ -15363,120 +15415,109 @@ exports.generateCSSRuleset = generateCSSRuleset;
 
 "use strict";
 
+/* global Map */
 
-Object.defineProperty(exports, '__esModule', {
+
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var MAP_EXISTS = typeof Map !== 'undefined';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OrderedElements = (function () {
     /* ::
     elements: {[string]: any};
     keyOrder: string[];
+     static fromObject: ({[string]: any}) => OrderedElements;
+    static fromMap: (Map<string,any>) => OrderedElements;
+    static from: (Map<string,any> | {[string]: any} | OrderedElements) =>
+        OrderedElements;
     */
 
     function OrderedElements() {
+        var elements /* : {[string]: any} */ = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+        var keyOrder /* : string[] */ = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
         _classCallCheck(this, OrderedElements);
 
-        this.elements = {};
-        this.keyOrder = [];
+        this.elements = elements;
+        this.keyOrder = keyOrder;
     }
 
     _createClass(OrderedElements, [{
-        key: 'forEach',
+        key: "forEach",
         value: function forEach(callback /* : (string, any) => void */) {
             for (var i = 0; i < this.keyOrder.length; i++) {
-                // (value, key) to match Map's API
-                callback(this.elements[this.keyOrder[i]], this.keyOrder[i]);
+                callback(this.keyOrder[i], this.elements[this.keyOrder[i]]);
             }
         }
     }, {
-        key: 'set',
-        value: function set(key, /* : string */value, /* : any */shouldReorder /* : ?boolean */) {
-            var _this = this;
-
+        key: "map",
+        value: function map(callback /* : (string, any) => any */) /* : OrderedElements */{
+            var results = new OrderedElements();
+            for (var i = 0; i < this.keyOrder.length; i++) {
+                results.set(this.keyOrder[i], callback(this.keyOrder[i], this.elements[this.keyOrder[i]]));
+            }
+            return results;
+        }
+    }, {
+        key: "set",
+        value: function set(key, /* : string */value /* : any */) {
             if (!this.elements.hasOwnProperty(key)) {
                 this.keyOrder.push(key);
-            } else if (shouldReorder) {
-                var index = this.keyOrder.indexOf(key);
-                this.keyOrder.splice(index, 1);
-                this.keyOrder.push(key);
             }
-
-            if (value == null) {
-                this.elements[key] = value;
-                return;
-            }
-
-            if (MAP_EXISTS && value instanceof Map || value instanceof OrderedElements) {
-                var _ret = (function () {
-                    // We have found a nested Map, so we need to recurse so that all
-                    // of the nested objects and Maps are merged properly.
-                    var nested = _this.elements.hasOwnProperty(key) ? _this.elements[key] : new OrderedElements();
-                    value.forEach(function (value, key) {
-                        nested.set(key, value, shouldReorder);
-                    });
-                    _this.elements[key] = nested;
-                    return {
-                        v: undefined
-                    };
-                })();
-
-                if (typeof _ret === 'object') return _ret.v;
-            }
-
-            if (!Array.isArray(value) && typeof value === 'object') {
-                // We have found a nested object, so we need to recurse so that all
-                // of the nested objects and Maps are merged properly.
-                var nested = this.elements.hasOwnProperty(key) ? this.elements[key] : new OrderedElements();
-                var keys = Object.keys(value);
-                for (var i = 0; i < keys.length; i += 1) {
-                    nested.set(keys[i], value[keys[i]], shouldReorder);
-                }
-                this.elements[key] = nested;
-                return;
-            }
-
             this.elements[key] = value;
         }
     }, {
-        key: 'get',
+        key: "get",
         value: function get(key /* : string */) /* : any */{
             return this.elements[key];
         }
     }, {
-        key: 'has',
+        key: "has",
         value: function has(key /* : string */) /* : boolean */{
             return this.elements.hasOwnProperty(key);
-        }
-    }, {
-        key: 'addStyleType',
-        value: function addStyleType(styleType /* : any */) /* : void */{
-            var _this2 = this;
-
-            if (MAP_EXISTS && styleType instanceof Map || styleType instanceof OrderedElements) {
-                styleType.forEach(function (value, key) {
-                    _this2.set(key, value, true);
-                });
-            } else {
-                var keys = Object.keys(styleType);
-                for (var i = 0; i < keys.length; i++) {
-                    this.set(keys[i], styleType[keys[i]], true);
-                }
-            }
         }
     }]);
 
     return OrderedElements;
 })();
 
-exports['default'] = OrderedElements;
-module.exports = exports['default'];
+exports["default"] = OrderedElements;
+
+OrderedElements.fromObject = function (obj) {
+    return new OrderedElements(obj, Object.keys(obj));
+};
+
+OrderedElements.fromMap = function (map) {
+    var ret = new OrderedElements();
+    map.forEach(function (val, key) {
+        ret.set(key, val);
+    });
+    return ret;
+};
+
+OrderedElements.from = function (obj) {
+    if (obj instanceof OrderedElements) {
+        // NOTE(emily): This makes a shallow copy of the previous elements, so
+        // if the elements are deeply modified it will affect all copies.
+        return new OrderedElements(_extends({}, obj.elements), obj.keyOrder.slice());
+    } else if (
+    // For some reason, flow complains about a plain
+    // `typeof Map !== "undefined"` check. Casting `Map` to `any` solves
+    // the problem.
+    typeof /*::(*/Map /*: any)*/ !== "undefined" && obj instanceof Map) {
+        return OrderedElements.fromMap(obj);
+    } else {
+        return OrderedElements.fromObject(obj);
+    }
+};
+module.exports = exports["default"];
 
 /***/ }),
 /* 115 */
@@ -30261,7 +30302,8 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 function ExpandableLink(_ref) {
   var text = _ref.text,
       hasEllipsis = _ref.hasEllipsis,
-      onClick = _ref.onClick;
+      onClick = _ref.onClick,
+      textStyle = _ref.textStyle;
 
   var textClassName = 'text-uppercase text-secondary font-sm bold';
   return React.createElement(
@@ -30271,7 +30313,7 @@ function ExpandableLink(_ref) {
     ' ',
     React.createElement(
       _src.Button,
-      { rootClassName: (0, _classnames2['default'])(textClassName, 'p-x-0'), onClick: onClick, type: 'link' },
+      { style: textStyle, rootClassName: (0, _classnames2['default'])(textClassName, 'p-a-0'), onClick: onClick, type: 'link' },
       text
     )
   );
@@ -30281,9 +30323,10 @@ function renderEllipsisFn(_ref2) {
   var more = _ref2.more,
       less = _ref2.less,
       isExpanded = _ref2.isExpanded,
-      toggleExpand = _ref2.toggleExpand;
+      toggleExpand = _ref2.toggleExpand,
+      textStyle = _ref2.textStyle;
 
-  return isExpanded ? React.createElement(ExpandableLink, { text: less, onClick: toggleExpand }) : React.createElement(ExpandableLink, { hasEllipsis: true, text: more, onClick: toggleExpand });
+  return isExpanded ? React.createElement(ExpandableLink, { text: less, onClick: toggleExpand, textStyle: textStyle }) : React.createElement(ExpandableLink, { hasEllipsis: true, text: more, onClick: toggleExpand, textStyle: textStyle });
 }
 
 function ReadMore(_ref3) {
@@ -30298,7 +30341,9 @@ function ReadMore(_ref3) {
       toggleExpand = _ref3.toggleExpand,
       _ref3$renderEllipsis = _ref3.renderEllipsis,
       renderEllipsis = _ref3$renderEllipsis === undefined ? renderEllipsisFn : _ref3$renderEllipsis,
-      rest = _objectWithoutProperties(_ref3, ['children', 'isExpanded', 'less', 'lines', 'more', 'toggleExpand', 'renderEllipsis']);
+      _ref3$textStyle = _ref3.textStyle,
+      textStyle = _ref3$textStyle === undefined ? { color: _src.color.secondaryText } : _ref3$textStyle,
+      rest = _objectWithoutProperties(_ref3, ['children', 'isExpanded', 'less', 'lines', 'more', 'toggleExpand', 'renderEllipsis', 'textStyle']);
 
   return React.createElement(
     'div',
@@ -30307,11 +30352,11 @@ function ReadMore(_ref3) {
       _Truncate2['default'],
       _extends({
         lines: !isExpanded && lines,
-        ellipsis: renderEllipsis({ more: more, less: less, toggleExpand: toggleExpand, isExpanded: false })
+        ellipsis: renderEllipsis({ more: more, less: less, toggleExpand: toggleExpand, isExpanded: false, textStyle: textStyle })
       }, rest),
       children
     ),
-    isExpanded && renderEllipsis({ more: more, less: less, toggleExpand: toggleExpand, isExpanded: true })
+    isExpanded && renderEllipsis({ more: more, less: less, toggleExpand: toggleExpand, isExpanded: true, textStyle: textStyle })
   );
 }
 
@@ -50303,7 +50348,7 @@ var searchKeywordRegex = exports.searchKeywordRegex = /[*+^${}()|[\]\\":;<>=&%@#
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
+
 
 var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
 
@@ -50332,10 +50377,10 @@ var StyleSheet = {
             var key = _ref2[0];
             var val = _ref2[1];
 
-            var stringVal = JSON.stringify(val);
             return [key, {
-                _len: stringVal.length,
-                _name: process.env.NODE_ENV === 'production' ? (0, _util.hashString)(stringVal) : key + '_' + (0, _util.hashString)(stringVal),
+                // TODO(emily): Make a 'production' mode which doesn't prepend
+                // the class name here, to make the generated CSS smaller.
+                _name: key + '_' + (0, _util.hashObject)(val),
                 _definition: val
             }];
         });
@@ -50454,14 +50499,13 @@ selectorHandlers /* : SelectorHandler[] */
 };
 
 module.exports = makeExports;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(process) {
+
 
 Object.defineProperty(exports, '__esModule', {
     value: true
@@ -50473,10 +50517,6 @@ var _asap = __webpack_require__(510);
 
 var _asap2 = _interopRequireDefault(_asap);
 
-var _orderedElements = __webpack_require__(114);
-
-var _orderedElements2 = _interopRequireDefault(_orderedElements);
-
 var _generate = __webpack_require__(113);
 
 var _util = __webpack_require__(68);
@@ -50485,10 +50525,6 @@ var _util = __webpack_require__(68);
 import type { SheetDefinition, SheetDefinitions } from './index.js';
 import type { MaybeSheetDefinition } from './exports.js';
 import type { SelectorHandler } from './generate.js';
-type ProcessedStyleDefinitions = {
-  classNameBits: Array<string>,
-  definitionBits: Array<Object>,
-};
 */
 
 // The current <style> tag we are inserting into, or null if we haven't
@@ -50581,21 +50617,9 @@ var stringHandlers = {
             // Since keyframes need 3 layers of nesting, we use `generateCSS` to
             // build the inner layers and wrap it in `@keyframes` ourselves.
             var finalVal = '@keyframes ' + _name + '{';
-
-            // TODO see if we can find a way where checking for OrderedElements
-            // here is not necessary. Alternatively, perhaps we should have a
-            // utility method that can iterate over either a plain object, an
-            // instance of OrderedElements, or a Map, and then use that here and
-            // elsewhere.
-            if (val instanceof _orderedElements2['default']) {
-                val.forEach(function (valVal, valKey) {
-                    finalVal += (0, _generate.generateCSS)(valKey, [valVal], selectorHandlers, stringHandlers, false);
-                });
-            } else {
-                Object.keys(val).forEach(function (key) {
-                    finalVal += (0, _generate.generateCSS)(key, [val[key]], selectorHandlers, stringHandlers, false);
-                });
-            }
+            Object.keys(val).forEach(function (key) {
+                finalVal += (0, _generate.generateCSS)(key, [val[key]], selectorHandlers, stringHandlers, false);
+            });
             finalVal += '}';
 
             injectGeneratedCSSOnce(_name, finalVal);
@@ -50620,25 +50644,23 @@ var injectionBuffer = "";
 var isBuffering = false;
 
 var injectGeneratedCSSOnce = function injectGeneratedCSSOnce(key, generatedCSS) {
-    if (alreadyInjected[key]) {
-        return;
-    }
+    if (!alreadyInjected[key]) {
+        if (!isBuffering) {
+            // We should never be automatically buffering on the server (or any
+            // place without a document), so guard against that.
+            if (typeof document === "undefined") {
+                throw new Error("Cannot automatically buffer without a document");
+            }
 
-    if (!isBuffering) {
-        // We should never be automatically buffering on the server (or any
-        // place without a document), so guard against that.
-        if (typeof document === "undefined") {
-            throw new Error("Cannot automatically buffer without a document");
+            // If we're not already buffering, schedule a call to flush the
+            // current styles.
+            isBuffering = true;
+            (0, _asap2['default'])(flushToStyleTag);
         }
 
-        // If we're not already buffering, schedule a call to flush the
-        // current styles.
-        isBuffering = true;
-        (0, _asap2['default'])(flushToStyleTag);
+        injectionBuffer += generatedCSS;
+        alreadyInjected[key] = true;
     }
-
-    injectionBuffer += generatedCSS;
-    alreadyInjected[key] = true;
 };
 
 var injectStyleOnce = function injectStyleOnce(key, /* : string */
@@ -50648,13 +50670,11 @@ useImportant /* : boolean */
 ) {
     var selectorHandlers /* : SelectorHandler[] */ = arguments.length <= 4 || arguments[4] === undefined ? [] : arguments[4];
 
-    if (alreadyInjected[key]) {
-        return;
+    if (!alreadyInjected[key]) {
+        var generated = (0, _generate.generateCSS)(selector, definitions, selectorHandlers, stringHandlers, useImportant);
+
+        injectGeneratedCSSOnce(key, generated);
     }
-
-    var generated = (0, _generate.generateCSS)(selector, definitions, selectorHandlers, stringHandlers, useImportant);
-
-    injectGeneratedCSSOnce(key, generated);
 };
 
 exports.injectStyleOnce = injectStyleOnce;
@@ -50702,34 +50722,6 @@ var addRenderedClassNames = function addRenderedClassNames(classNames /* : strin
 };
 
 exports.addRenderedClassNames = addRenderedClassNames;
-var processStyleDefinitions = function processStyleDefinitions(styleDefinitions, /* : any[] */
-result /* : ProcessedStyleDefinitions */
-) /* : void */{
-    for (var i = 0; i < styleDefinitions.length; i += 1) {
-        // Filter out falsy values from the input, to allow for
-        // `css(a, test && c)`
-        if (styleDefinitions[i]) {
-            if (Array.isArray(styleDefinitions[i])) {
-                // We've encountered an array, so let's recurse
-                processStyleDefinitions(styleDefinitions[i], result);
-            } else {
-                result.classNameBits.push(styleDefinitions[i]._name);
-                result.definitionBits.push(styleDefinitions[i]._definition);
-            }
-        }
-    }
-};
-
-// Sum up the lengths of the stringified style definitions (which was saved as _len property)
-// and use modulus to return a single byte hash value.
-// We append this extra byte to the 32bit hash to decrease the chance of hash collisions.
-var getStyleDefinitionsLengthHash = function getStyleDefinitionsLengthHash(styleDefinitions /* : any[] */) {
-    return (/* : string */(styleDefinitions.reduce(function (length, styleDefinition) {
-            return length + (styleDefinition ? styleDefinition._len : 0);
-        }, 0) % 36).toString(36)
-    );
-};
-
 /**
  * Inject styles associated with the passed style definition objects, and return
  * an associated CSS class name.
@@ -50744,31 +50736,29 @@ var injectAndGetClassName = function injectAndGetClassName(useImportant, /* : bo
 styleDefinitions, /* : MaybeSheetDefinition[] */
 selectorHandlers /* : SelectorHandler[] */
 ) /* : string */{
-    var processedStyleDefinitions /* : ProcessedStyleDefinitions */ = {
-        classNameBits: [],
-        definitionBits: []
-    };
-    // Mutates processedStyleDefinitions
-    processStyleDefinitions(styleDefinitions, processedStyleDefinitions);
+    styleDefinitions = (0, _util.flattenDeep)(styleDefinitions);
 
+    var classNameBits = [];
+    var definitionBits = [];
+    for (var i = 0; i < styleDefinitions.length; i += 1) {
+        // Filter out falsy values from the input, to allow for
+        // `css(a, test && c)`
+        if (styleDefinitions[i]) {
+            classNameBits.push(styleDefinitions[i]._name);
+            definitionBits.push(styleDefinitions[i]._definition);
+        }
+    }
     // Break if there aren't any valid styles.
-    if (processedStyleDefinitions.classNameBits.length === 0) {
+    if (classNameBits.length === 0) {
         return "";
     }
+    var className = classNameBits.join("-o_O-");
 
-    var className = undefined;
-    if (process.env.NODE_ENV === 'production') {
-        className = processedStyleDefinitions.classNameBits.length === 1 ? '_' + processedStyleDefinitions.classNameBits[0] : '_' + (0, _util.hashString)(processedStyleDefinitions.classNameBits.join()) + getStyleDefinitionsLengthHash(styleDefinitions);
-    } else {
-        className = processedStyleDefinitions.classNameBits.join("-o_O-");
-    }
-
-    injectStyleOnce(className, '.' + className, processedStyleDefinitions.definitionBits, useImportant, selectorHandlers);
+    injectStyleOnce(className, '.' + className, definitionBits, useImportant, selectorHandlers);
 
     return className;
 };
 exports.injectAndGetClassName = injectAndGetClassName;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
 /* 507 */

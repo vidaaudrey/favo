@@ -7,8 +7,8 @@ import 'src/styles/index.css';
 
 export { default as UniversalBlock } from './components/UniversalBlock';
 export { default as Template, Template as TemplateBase } from './components/templates/Template';
-
 export { default as CustomBlock, CustomBlock as CustomBlockBase } from './components/customBlock/CustomBlock';
+
 export {
   default as SuccessStoriesMDP,
   SuccessStoriesMDP as SuccessStoriesMDPBase,
