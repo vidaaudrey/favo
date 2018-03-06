@@ -28,3 +28,9 @@ export {
 } from './components/eng/mdp/EarnCreditMDP';
 
 export { default as CoursesMDP, CoursesMDP as CoursesMDPBase, CoursesMDPData } from './components/eng/mdp/CoursesMDP';
+
+export {
+  default as ProjectListMDP,
+  ProjectListMDP as ProjectListMDPBase,
+  ProjectListMDPData,
+} from './components/eng/mdp/ProjectListMDP';

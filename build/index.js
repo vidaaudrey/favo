@@ -15567,7 +15567,7 @@ exports.default = { Button: _Button2.default, Divider: _Divider2.default, HTML: 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CoursesMDPData = exports.CoursesMDPBase = exports.CoursesMDP = exports.EarnCreditMDPData = exports.EarnCreditMDPBase = exports.EarnCreditMDP = exports.AboutMasterTrackData = exports.AboutMasterTrackBase = exports.AboutMasterTrack = exports.SuccessStoriesMDPData = exports.SuccessStoriesMDPBase = exports.SuccessStoriesMDP = exports.CustomBlockBase = exports.CustomBlock = exports.TemplateBase = exports.Template = exports.UniversalBlock = undefined;
+exports.ProjectListMDPData = exports.ProjectListMDPBase = exports.ProjectListMDP = exports.CoursesMDPData = exports.CoursesMDPBase = exports.CoursesMDP = exports.EarnCreditMDPData = exports.EarnCreditMDPBase = exports.EarnCreditMDP = exports.AboutMasterTrackData = exports.AboutMasterTrackBase = exports.AboutMasterTrack = exports.SuccessStoriesMDPData = exports.SuccessStoriesMDPBase = exports.SuccessStoriesMDP = exports.CustomBlockBase = exports.CustomBlock = exports.TemplateBase = exports.Template = exports.UniversalBlock = undefined;
 
 var _UniversalBlock = __webpack_require__(177);
 
@@ -15689,6 +15689,27 @@ Object.defineProperty(exports, 'CoursesMDPData', {
   enumerable: true,
   get: function get() {
     return _CoursesMDP.CoursesMDPData;
+  }
+});
+
+var _ProjectListMDP = __webpack_require__(920);
+
+Object.defineProperty(exports, 'ProjectListMDP', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_ProjectListMDP).default;
+  }
+});
+Object.defineProperty(exports, 'ProjectListMDPBase', {
+  enumerable: true,
+  get: function get() {
+    return _ProjectListMDP.ProjectListMDP;
+  }
+});
+Object.defineProperty(exports, 'ProjectListMDPData', {
+  enumerable: true,
+  get: function get() {
+    return _ProjectListMDP.ProjectListMDPData;
   }
 });
 
@@ -116048,6 +116069,310 @@ exports.default = (0, _recompose.compose)((0, _recompose.withStateHandlers)({
     };
   }
 }))(ExpandableSections);
+
+/***/ }),
+/* 920 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ProjectListMDPData = undefined;
+exports.ProjectListMDP = ProjectListMDP;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _recompose = __webpack_require__(2);
+
+var _SectionTitle = __webpack_require__(70);
+
+var _SectionTitle2 = _interopRequireDefault(_SectionTitle);
+
+var _ProjectCard = __webpack_require__(921);
+
+var _ProjectCard2 = _interopRequireDefault(_ProjectCard);
+
+var _ExpandableSections = __webpack_require__(919);
+
+var _ExpandableSections2 = _interopRequireDefault(_ExpandableSections);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+function ProjectListMDP(_ref) {
+  var title = _ref.title,
+      subtitle = _ref.subtitle,
+      _ref$projects = _ref.projects,
+      projects = _ref$projects === undefined ? [] : _ref$projects,
+      rest = _objectWithoutProperties(_ref, ['title', 'subtitle', 'projects']);
+
+  return React.createElement(
+    'div',
+    { className: 'ProjectListMDP bg-light-gray p-y-5' },
+    React.createElement(
+      _courseraUi.Container,
+      null,
+      React.createElement(
+        _courseraUi.Row,
+        null,
+        React.createElement(_SectionTitle2.default, { title: title, subtitle: subtitle }),
+        React.createElement(
+          _courseraUi.Col,
+          null,
+          React.createElement(_ExpandableSections2.default, {
+            dataList: projects,
+            defaultDisplayItemCount: 3,
+            collapsedText: 'See all ' + projects.length + ' projects',
+            expandedText: 'See less',
+            renderItem: function renderItem(project) {
+              return React.createElement(
+                'div',
+                { className: 'm-b-2', key: project.name },
+                React.createElement(_ProjectCard2.default, project)
+              );
+            }
+          })
+        )
+      )
+    )
+  );
+}
+
+var ProjectListMDPData = exports.ProjectListMDPData = {
+  title: 'Industry-relevant hands-on projects to build your portfolio',
+  subtitle: 'Learners will incorporate UX Research and Design to design a complete product, taking it form an initial concept to an interactive prototype.',
+  projects: [{
+    id: '1',
+    name: 'UX (User Experience) Capstone',
+    totalDuration: '8 weeks to complete',
+    weeklyTimeCommitment: '4-5 hours per week',
+    description: 'In this UX capstone, you’ll conduct a multi-stage user experience project to design a product from scratch, incorporating Design and Research methods within the context of Iterative User-Centered Design. This capstone project will be divided into 6 "Milestones" to provide  MORE',
+    image: 'https://i.imgur.com/P8i7ZWS.png'
+  }, {
+    id: '2',
+    name: 'From Wireframe to Prototype',
+    totalDuration: '3 weeks to complete',
+    weeklyTimeCommitment: '3-4 hours per week',
+    description: 'Building on UX Design: From Concept to Wireframe, this UX course you will show you how to take a set of wireframes and interaction architecture and embody it in an interactive prototype. Using a state-of-the-art prototyping tool, you will build a testable prototype and use it to MORE',
+    learningObjectives: ['How to run a paper prototype test', 'Expand on the wireframe by developing high-fidelity mockups', 'Develop interactivity to further test the user experience', 'Create a design specification document']
+  }, {
+    id: '3',
+    name: 'UX Research at Scale: Analytics and Online Experiments',
+    totalDuration: '8 weeks to complete',
+    weeklyTimeCommitment: '4-5 hours per week',
+    description: 'Learn how to conduct and analyze UX research at scale using online tools such as A/B testing and web analytics.',
+    learningObjectives: ['Learn how web analytics works and how to analyze analytics data', 'Understand how to develop A-B tests, before/after, and multivariate experiments', 'Learn how to set up and analyze remote unmoderated testing studies']
+  }]
+};
+
+exports.default = (0, _recompose.compose)((0, _recompose.withProps)(function () {
+  return ProjectListMDPData;
+}))(ProjectListMDP);
+
+/***/ }),
+/* 921 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = ProjectCard;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _LearningObjectives = __webpack_require__(524);
+
+var _LearningObjectives2 = _interopRequireDefault(_LearningObjectives);
+
+var _GradientIcon = __webpack_require__(922);
+
+var _GradientIcon2 = _interopRequireDefault(_GradientIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var styles = _courseraUi.StyleSheet.create({
+  underlay: _defineProperty({
+    background: _courseraUi.color.white,
+    margin: '-3rem',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    transform: 'skewX(353deg) translate(-3%)'
+  }, '@media (max-width: ' + _courseraUi.breakPoint.lg + 'px)', {
+    background: 'transparent'
+  }),
+  imageWrapperLg: _defineProperty({
+    marginBottom: 0,
+    position: 'absolute',
+    top: '-3rem',
+    left: 0,
+    bottom: '-3rem',
+    right: '-3rem'
+  }, '@media (max-width: ' + _courseraUi.breakPoint.lg + 'px)', {
+    display: 'none'
+  }),
+  imageWrapperSm: {
+    margin: '-3rem',
+    marginBottom: '3rem'
+  },
+  zIndexHigh: {
+    position: 'relative',
+    zIndex: 1
+  },
+  zIndexLow: {
+    position: 'relative',
+    zIndex: 0
+  },
+  imageTop: _defineProperty({}, '@media (min-width: ' + _courseraUi.breakPoint.lg + 'px)', {
+    display: 'none'
+  })
+});
+
+function ProjectCard(_ref) {
+  var name = _ref.name,
+      totalDuration = _ref.totalDuration,
+      weeklyTimeCommitment = _ref.weeklyTimeCommitment,
+      description = _ref.description,
+      learningObjectives = _ref.learningObjectives,
+      image = _ref.image;
+
+  var timeText = '';
+  if (totalDuration && weeklyTimeCommitment) {
+    timeText = totalDuration + ' (' + weeklyTimeCommitment + ')';
+  } else if (totalDuration) {
+    timeText = totalDuration + ' ';
+  } else if (weeklyTimeCommitment) {
+    timeText = weeklyTimeCommitment + ' ';
+  }
+
+  var showLearningObjectives = learningObjectives && learningObjectives.length > 0;
+  return React.createElement(
+    _courseraUi.CardV2,
+    { rootClassName: 'ProjectCard bg-white' },
+    React.createElement(
+      _courseraUi.CardSection,
+      { rootClassName: 'p-a-3' },
+      React.createElement(
+        _courseraUi.Row,
+        { alignItems: 'stretch' },
+        !showLearningObjectives && React.createElement(
+          _courseraUi.Col,
+          { xs: 12, lg: 6, rootClassName: styles.imageTop },
+          React.createElement(
+            _courseraUi.Box,
+            { rootClassName: styles.imageWrapperSm },
+            React.createElement('img', { src: image, alt: name, className: 'w-100 h-100' })
+          )
+        ),
+        React.createElement(
+          _courseraUi.Col,
+          { xs: 12, lg: 6, rootClassName: styles.zIndexHigh },
+          !showLearningObjectives && React.createElement('div', (0, _courseraUi.css)('pos-absolute', styles.underlay)),
+          React.createElement(
+            'div',
+            { className: 'pos-relative p-r-3' },
+            React.createElement(
+              _courseraUi.Box,
+              { alignItems: 'center', rootClassName: 'm-b-1' },
+              React.createElement(
+                'div',
+                (0, _courseraUi.css)('m-r-1', styles.iconWrapper),
+                React.createElement(_GradientIcon2.default, null)
+              ),
+              React.createElement(
+                _courseraUi.Strong,
+                { rootClassName: 'text-secondary' },
+                timeText
+              )
+            ),
+            React.createElement(
+              _courseraUi.H2Bold,
+              { tag: 'h3', rootClassName: 'm-b-1' },
+              name
+            ),
+            React.createElement(
+              _courseraUi.ReadMore,
+              null,
+              description
+            )
+          )
+        ),
+        React.createElement(
+          _courseraUi.Col,
+          { xs: 12, lg: 6, rootClassName: styles.zIndexLow },
+          showLearningObjectives && React.createElement(_LearningObjectives2.default, { learningObjectives: learningObjectives, titleTag: 'h4', oneColumnPerRow: true }),
+          !showLearningObjectives && image && React.createElement(
+            _courseraUi.Box,
+            { rootClassName: styles.imageWrapperLg },
+            React.createElement('img', { src: image, alt: name, className: 'w-100 h-100' })
+          )
+        )
+      )
+    )
+  );
+}
+
+/***/ }),
+/* 922 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = GradientIcon;
+
+var _react = __webpack_require__(1);
+
+var React = _interopRequireWildcard(_react);
+
+var _courseraUi = __webpack_require__(4);
+
+var _svg = __webpack_require__(50);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var ICON_SIZE = 40;
+function GradientIcon(_ref) {
+  var _ref$bgGradient = _ref.bgGradient,
+      bgGradient = _ref$bgGradient === undefined ? _courseraUi.gradient.peach : _ref$bgGradient,
+      _ref$icon = _ref.icon,
+      Icon = _ref$icon === undefined ? _svg.SvgClock : _ref$icon;
+
+  return React.createElement(
+    _courseraUi.GradientWrapper,
+    { gradient: bgGradient, style: { borderRadius: '50%' } },
+    React.createElement(
+      _courseraUi.CenterBox,
+      { style: { width: ICON_SIZE, height: ICON_SIZE } },
+      React.createElement(Icon, { size: 20, color: _courseraUi.color.white })
+    )
+  );
+}
 
 /***/ })
 /******/ ]);
