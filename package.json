@@ -7,31 +7,17 @@
     "email": "me@audreyli.me"
   },
   "main": "build/index.js",
-  "peerDependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0"
-  },
   "dependencies": {
     "@coursera/coursera-ui": "^0.4.2",
     "aphrodite": "^1.2.5",
     "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
     "react-markdown": "^3.2.2",
     "recompose": "^0.26.0",
     "underscore": "^1.8.3"
   },
-  "scripts": {
-    "test": "jest",
-    "test-w": "npm test -- --watch",
-    "start": "webpack --watch",
-    "build": "webpack",
-    "format": "prettier-eslint --write \"src/**/*.js\" ",
-    "flow": "node_modules/.bin/flow",
-    "precommit": "lint-staged && npm run flow",
-    "release": "np --no-cleanup"
-  },
   "devDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^7.0.0",
@@ -51,10 +37,21 @@
     "style-loader": "^0.20.2",
     "webpack": "^2.6.1"
   },
+  "peerDependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-w": "npm test -- --watch",
+    "start": "webpack --watch",
+    "build": "webpack",
+    "format": "prettier-eslint --write \"src/**/*.js\" ",
+    "flow": "node_modules/.bin/flow",
+    "precommit": "lint-staged && npm run flow",
+    "release": "np --no-cleanup"
+  },
   "lint-staged": {
-    "src/*.+(js|jsx)": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "src/*.+(js|jsx)": ["prettier-eslint --write", "git add"]
   }
 }

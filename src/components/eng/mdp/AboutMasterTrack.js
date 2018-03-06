@@ -46,7 +46,7 @@ export function AboutMasterTrack({
       <Row>
         <Col xs={12} md={8} rootClassName="p-r-4">
           <H2 tag="span" rootClassName="d-block m-b-3">
-            About this MasterTrack
+            About this MasterTrack Certificate
           </H2>
           <H2Bold rootClassName="m-b-2">{tagline}</H2Bold>
           <div className="p-b-1 m-b-1">
