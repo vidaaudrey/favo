@@ -50,12 +50,9 @@
     "format": "prettier-eslint --write \"src/**/*.js\" ",
     "flow": "node_modules/.bin/flow",
     "precommit": "lint-staged && npm run flow",
-    "release": "np --no-cleanup  --no-tests"
+    "release": "np --yolo"
   },
   "lint-staged": {
-    "src/*.+(js|jsx)": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "src/*.+(js|jsx)": ["prettier-eslint --write", "git add"]
   }
 }
