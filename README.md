@@ -27,4 +27,8 @@ Visit [http://localhost:3000/](http://localhost:3000/) to see demo blocks.
 
 Try to change the block component inside the src folder and see live updates.
 
+## Use in production
+
+Ready to publish the components? Run `yarn release` and start using the components in production.
+
 ## TODO
