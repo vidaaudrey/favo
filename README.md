@@ -20,7 +20,7 @@ Open a new tab and run
 cd playground
 yarn
 yarn start
-yarn link fav
+yarn link favo
 ```
 
 Visit [http://localhost:3000/](http://localhost:3000/) to see demo blocks.

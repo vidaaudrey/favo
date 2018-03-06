@@ -36,7 +36,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export type Props = Array<{ icon: string, title: string, subtitle?: string }>;
+export type DataList = Array<{ icon: string, title: string, subtitle?: string }>;
+
+type Props = {
+  dataList: DataList,
+};
 
 export default function ProductGlance({ dataList = [] }: Props) {
   const dataListWithIcons = dataList.map(item => ({

@@ -10,8 +10,17 @@ export { default as CustomBlock, CustomBlock as CustomBlockBase } from './compon
 export {
   default as SuccessStoriesMDP,
   SuccessStoriesMDP as SuccessStoriesMDPBase,
+  SuccessStoriesMDPData,
 } from './components/eng/mdp/SuccessStoriesMDP';
+
 export {
   default as AboutMasterTrack,
   AboutMasterTrack as AboutMasterTrackBase,
+  AboutMasterTrackData,
 } from './components/eng/mdp/AboutMasterTrack';
+
+export {
+  default as EarnCreditMDP,
+  EarnCreditMDP as EarnCreditMDPBase,
+  EarnCreditMDPData,
+} from './components/eng/mdp/EarnCreditMDP';
