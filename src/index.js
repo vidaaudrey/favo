@@ -26,3 +26,5 @@ export {
   EarnCreditMDP as EarnCreditMDPBase,
   EarnCreditMDPData,
 } from './components/eng/mdp/EarnCreditMDP';
+
+export { default as CoursesMDP, CoursesMDP as CoursesMDPBase, CoursesMDPData } from './components/eng/mdp/CoursesMDP';

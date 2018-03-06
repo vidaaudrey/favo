@@ -32,3 +32,8 @@ Try to change the block component inside the src folder and see live updates.
 Ready to publish the components? Run `yarn release` and start using the components in production.
 
 ## TODO
+
+Translations
+
+* [ ] CoursesMDP
+* [ ] CourseCard
