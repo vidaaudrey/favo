@@ -1,39 +1,6 @@
 # FAVO
 
-A UI block library to quickly build pages
 
-[NPM](https://www.npmjs.com/package/favo)
-[Github](https://github.com/vidaaudrey/favo)
+A UI library for quickly building pages and UI blocks.
 
-## Getting Started
-
-```
-git clone https://github.com/vidaaudrey/favo
-yarn
-yarn start
-yarn link favo
-```
-
-Open a new tab and run
-
-```
-cd playground
-yarn
-yarn start
-yarn link favo
-```
-
-Visit [http://localhost:3000/](http://localhost:3000/) to see demo blocks.
-
-Try to change the block component inside the src folder and see live updates.
-
-## Use in production
-
-Ready to publish the components? Run `yarn release` and start using the components in production.
-
-## TODO
-
-Translations
-
-* [ ] CoursesMDP
-* [ ] CourseCard
+**NOTE** this repo has been moved to [private repo](https://github.com/webedx-spark/favo) for further development. 
